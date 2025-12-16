@@ -17,7 +17,7 @@ const EmployeeForm = ({ employee, onSave, onCancel }) => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Step 1: Load all employees once, and set form data when 'employee' prop changes
+   
     useEffect(() => {
         loadAllEmployees();
         
@@ -31,7 +31,7 @@ const EmployeeForm = ({ employee, onSave, onCancel }) => {
                 manager: employee.manager?._id || ''
             });
         } else {
-            // Reset form when switching from edit to add
+           
             setFormData({
                 name: '',
                 email: '',
@@ -43,37 +43,33 @@ const EmployeeForm = ({ employee, onSave, onCancel }) => {
         }
     }, [employee]);
 
-    // Step 2: This effect recalculates the available managers
-    // whenever the selected employee type or the list of employees changes.
+    
     useEffect(() => {
         if (allEmployees.length === 0) return;
 
         let filteredManagers = [];
 
-        // *** THIS IS THE FINAL BUSINESS LOGIC ***
+       
         if (formData.employeeType === 'Manager') {
-            // Rule: Managers can ONLY report to Org Managers
+            
             filteredManagers = allEmployees.filter(emp => emp.employeeType === 'Org Manager');
         
         } else if (formData.employeeType !== 'Org Manager') {
-            // Rule: Employees, Interns, Other can report to Org Managers, Managers, OR other Employees
+            
             filteredManagers = allEmployees.filter(emp => 
                 emp.employeeType === 'Org Manager' ||
                 emp.employeeType === 'Manager' ||
-                emp.employeeType === 'Employee' // This allows employees to be managers
+                emp.employeeType === 'Employee' 
             );
         }
-        // *** END OF LOGIC ***
-
-        // Always filter out the employee themselves (if editing)
+        
         if (employee) {
             filteredManagers = filteredManagers.filter(m => m._id !== employee._id);
         }
 
         setAvailableManagers(filteredManagers);
 
-        // Step 3: Validate the currently selected manager
-        // If the current manager is no longer in the valid list, reset the field
+       
         if (formData.manager) {
             const isManagerStillValid = filteredManagers.some(m => m._id === formData.manager);
             if (!isManagerStillValid) {
@@ -81,9 +77,7 @@ const EmployeeForm = ({ employee, onSave, onCancel }) => {
             }
         }
         
-    }, [formData.employeeType, allEmployees, employee]); // Dependencies for the effect
-
-    // Loads ALL employees into state for filtering
+    }, [formData.employeeType, allEmployees, employee]); 
     const loadAllEmployees = async () => {
         try {
             setLoading(true);
@@ -113,10 +107,10 @@ const EmployeeForm = ({ employee, onSave, onCancel }) => {
 
         const dataToSave = { ...formData };
         if (dataToSave.employeeType === 'Org Manager') {
-            dataToSave.manager = null; // Org Managers never have a manager
+            dataToSave.manager = null; 
         }
 
-        // Final check to ensure a manager is selected if required
+       
         if (dataToSave.employeeType !== 'Org Manager' && !dataToSave.manager) {
             setError('This employee type requires a manager.');
             setLoading(false);
@@ -291,5 +285,6 @@ const EmployeeForm = ({ employee, onSave, onCancel }) => {
         </div>
     );
 };
+
 
 export default EmployeeForm;
