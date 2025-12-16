@@ -18,10 +18,10 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/org-hiera
     useUnifiedTopology: true,
 })
 .then(() => {
-    console.log('✅ MongoDB database connection established successfully');
+    console.log(' MongoDB database connection established successfully');
 })
 .catch((error) => {
-    console.log('❌ MongoDB connection error:', error.message);
+    console.log(' MongoDB connection error:', error.message);
 });
 
 
@@ -75,3 +75,4 @@ app.listen(PORT, () => {
     console.log(` API Base: http://localhost:${PORT}/`);
 
 });
+
