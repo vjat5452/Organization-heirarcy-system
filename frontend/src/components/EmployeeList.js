@@ -15,7 +15,7 @@ const EmployeeList = ({ onEdit, onAddEmployee }) => {
         try {
             setLoading(true);
             const response = await employeeAPI.getAll();
-            // Sort employees
+            
             const sorted = response.data.sort((a, b) => {
                 const typePriority = { "Org Manager": 1, "Manager": 2, "Employee": 3, "Intern": 4, "Other": 5 };
                 const typeA = typePriority[a.employeeType] || 100;
@@ -34,19 +34,19 @@ const EmployeeList = ({ onEdit, onAddEmployee }) => {
     };
 
     const handleDelete = async (employeeId, employeeName) => {
-        // We assume the backend will return an error if deleting a manager with subordinates
+        
         if (window.confirm(`Are you sure you want to delete ${employeeName}?`)) {
             try {
                 await employeeAPI.delete(employeeId);
                 loadEmployees(); 
             } catch (error) {
-                // The backend error will be shown to the user
+                
                 alert(error.response?.data?.message || 'Error deleting employee. They may still manage other employees.');
             }
         }
     };
 
-    // Helper to get CSS class for badges
+   
     const getEmployeeTypeClass = (employeeType) => {
         switch (employeeType) {
             case 'Org Manager': return 'type-badge-org-manager';
@@ -58,7 +58,7 @@ const EmployeeList = ({ onEdit, onAddEmployee }) => {
         }
     };
 
-    // Helper to get initials for the avatar
+   
     const getInitials = (name) => {
         if (!name) return '?';
         const parts = name.split(' ');
@@ -66,7 +66,7 @@ const EmployeeList = ({ onEdit, onAddEmployee }) => {
         return (parts[0][0] + (parts[parts.length - 1][0] || '')).toUpperCase();
     };
 
-    // Filter employees based on search term
+    
     const filteredEmployees = employees.filter(emp =>
         emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (emp.position && emp.position.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -179,7 +179,7 @@ const EmployeeList = ({ onEdit, onAddEmployee }) => {
     );
 };
 
-// Avatar color helper (unchanged)
+
 const avatarColors = [
     '#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6', 
     '#1abc9c', '#e67e22', '#34495e', '#7f8c8d'
@@ -189,5 +189,6 @@ const getAvatarColor = (name) => {
     const charCodeSum = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
     return avatarColors[charCodeSum % avatarColors.length];
 };
+
 
 export default EmployeeList;
